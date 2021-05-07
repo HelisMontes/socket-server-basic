@@ -6,11 +6,12 @@ const http  = require('http');
 const socketio  = require('socket.io');
 const path  = require('path'); 
 
+const Sockets = require('./sockets');
 
 class Server {
   constructor (){
     this.app = express();
-    this.port = 8080;
+    this.port = process.env.PORT;
     
     // Http server
     this.server = http.createServer(this.app);
@@ -20,11 +21,17 @@ class Server {
   }
   middlewares(){
     //Desplegar el directorio publico
-    this.app.use( express.static (path.resolve(__dirname + '../public') ) );
+    this.app.use( express.static (path.resolve(__dirname, '../public') ) );
+  }
+  configurarSockets(){
+    new Sockets(this.io)
   }
   execute(){
     //Inicializar Middleware
     this.middlewares();
+
+    //Inicializar sockets
+    this.configurarSockets();
 
     this.server.listen(this.port,() => {
       console.log(`Servidor corriendo en http://localhost:${this.port}/`);
