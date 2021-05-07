@@ -13,7 +13,13 @@
   <script>
     const socket = io('http://localhost:8080/')
     socket.on('mensaje-bienvenida', (data) => {
-      console.log(data)
+      console.log(data);
+      setTimeout(() => {
+        socket.emit('mensaje-cliente', {
+          msg: 'Cliente',
+          nombre: 'Helis Montes'
+        });
+      }, 2000);
     })
   </script>
 </body>
